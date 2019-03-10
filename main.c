@@ -1,37 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
+
+int ss(int q)
+{
+    int i;
+    int t;
+    for(i=2;i<q;i++)
+		if(q%i==0) {t=0;break;}
+	     if(i==q) t=1;
+     return t;
+}
+
+int i,j,n,sum,all;
 int main()
 {
-    int a,b,i;
-    int sum;
-    while(scanf("%d%d",&a,&b)!=EOF)//£¨0<a<10000, 10<b<100£©
+    while(scanf("%d",&n)!=EOF)
     {
-
-
-            sum=0;
-            int sign=1;
-            if(a==0&&b==0)
-                      break;
-            for(i=0;i<100;i++)
-
-                   {
-                         sum=a*100+i;
-                         if(sum%b==0)
-                             {
-				if(sign==0)
-					printf(" ");
-				if(i<10)
-				{
-					printf("0");
-					printf("%d",i);
-				}
-				else
-					printf("%d",i);
-				sign = 0;
-			}
-		}
-		printf("\n");
+        sum=0;
+        if(n==0)
+            break;
+        for(i=3;i<n/2;i++)
+        {
+          if(ss(i)==1&&ss(n-i)==1)
+               sum+=1;
+        }
+        printf("%d\n",sum);
     }
-
+    return 0;
 }
