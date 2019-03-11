@@ -1,32 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
-
-int ss(int q)
-{
-    int i;
-    int t;
-    for(i=2;i<q;i++)
-		if(q%i==0) {t=0;break;}
-	     if(i==q) t=1;
-     return t;
-}
-
-int i,j,n,sum,all;
 int main()
 {
-    while(scanf("%d",&n)!=EOF)
+     int m,n,i,j,t,k;
+
+    while(scanf("%d",&k)!=EOF)
     {
-        sum=0;
-        if(n==0)
-            break;
-        for(i=3;i<n/2;i++)
+        getchar();
+        __int64 str[50]={0,1,1};
+
+        for(j=1;j<=k;j++)
         {
-          if(ss(i)==1&&ss(n-i)==1)
-               sum+=1;
+          scanf("%d %d",&m,&n);
+          t=n-m+1;
+          for(i=3;i<=t;i++)
+          {
+           str[i]=str[i-1]+str[i-2];
+          }
+          printf("%I64d\n",str[t]);
         }
-        printf("%d\n",sum);
+
     }
     return 0;
 }
