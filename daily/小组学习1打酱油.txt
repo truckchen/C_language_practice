@@ -1,0 +1,18 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int n,t,k,sum;
+    while(scanf("%d",&n)!=EOF)
+    {
+        sum=0;
+        t=n/50;
+        sum+=t*7;
+        k=(n%50)/30;
+        sum+=k*4;
+        sum+=(n-t*50-k*30)/10;
+        printf("%d\n",sum);
+    }
+    return 0;
+}
