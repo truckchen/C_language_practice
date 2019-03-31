@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <stdlib.h>
+/*time n*/
+int main()
+{
+    int n,i;
+    long long int flag,temp;
+    int ss[100010];
+    scanf("%d",&n);
+    {
+        for(i=0;i<n;i++)
+          scanf("%d",&ss[i]);
+        flag=0;
+        temp=0;
+        for(i=0;i<n;i++)
+        {
+            temp+=ss[i];
+            if(temp>flag)
+                flag=temp;
+            if(temp<0)
+                temp=0;
+         }
+         printf("%lld\n",flag);
+    }
+    return 0;
+}
