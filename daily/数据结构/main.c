@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define LEN sizeof(struct student)
-//反向输出不带头结点
 
 struct student
 {
@@ -14,13 +13,13 @@ struct student *creat()
   struct student *p1,*p2,*head;
   int n=0;
   printf("please scanf date:\n");
-  head=NULL;
+  head=(struct student *)malloc(LEN);
   p1=p2=(struct student *)malloc(LEN);
   scanf("%ld",&p1->score);
   while(p1->score!=0)
   {
       n++;
-      if(n==1)   head=p1;
+      if(n==1)   head->next=p1;
       else      p2->next=p1;
       p2=p1;
       p1=(struct student *)malloc(LEN);
@@ -49,38 +48,63 @@ void printflist(struct student *head)
 
 int main()
 {
-    struct student *pa,*pb,*pt,*flag;
+    struct student *pa,*pb,*pt,*flag,*pp;
     pa=creat();
     pb=creat();
     printflist(pa);
     printflist(pb);
-    flag=pt=pa;
-    pa=pa->next;
+    flag=pa;
+    pa=pa->next; //指向首元节点
     pb=pb->next;
+    if(pa->score<=pb->score)//比较首元节点的大小
+        {
+            flag->next=pa;
+            pp=pt=pa;
+            pa=pa->next;
+            pp->next=NULL;
+        }
+    else
+        {
+            flag->next=pb;
+            pp=pt=pb;
+            pb=pb->next;
+            pp->next=NULL;
+        }
     while(pa&&pb)
     {
         if(pa->score<=pb->score)
         {
-            pt->next=pa;
-            pt=pa;
+            flag->next=pa;
+            pp=pa;
             pa=pa->next;
+            pp->next=pt;
+            pt=pp;
         }
         else
         {
-            pt->next=pb;
-            pt=pb;
+            flag->next=pb;
+            pp=pb;
             pb=pb->next;
+            pp->next=pt;
+            pt=pp;
         }
     }
-    if(pa!=NULL)
-    {
-         pt->next=pa;
-    }
-    else
+    while(pa!=NULL)
+        {
+            flag->next=pa;
+            pp=pa;
+            pa=pa->next;
+            pp->next=pt;
+            pt=pp;
+        }
+    while(pb!=NULL)
        {
-           pt->next=pb;
+            flag->next=pb;
+            pp=pb;
+            pb=pb->next;
+            pp->next=pt;
+            pt=pp;
        }
-
     printflist(flag);
     return 0;
-}
+    }
