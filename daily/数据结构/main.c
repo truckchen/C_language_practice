@@ -1,110 +1,98 @@
-#include <stdio.h>
-#include <stdlib.h>
-#define LEN sizeof(struct student)
+#include<stdio.h>
+#include<stdlib.h>
 
-struct student
-{
-    long score;
-    struct student *next;
-};
+typedef enum { Linked, Thread } PointTag;
+typedef struct Node {
+	char data;
+	struct Node* lchild;
+	struct Node* rchild;
+	PointTag ltag;
+	PointTag rtag;
+}BitNode, *BiTree;
 
-struct student *creat()
-{
-  struct student *p1,*p2,*head;
-  int n=0;
-  printf("please scanf date:\n");
-  head=(struct student *)malloc(LEN);
-  p1=p2=(struct student *)malloc(LEN);
-  scanf("%ld",&p1->score);
-  while(p1->score!=0)
-  {
-      n++;
-      if(n==1)   head->next=p1;
-      else      p2->next=p1;
-      p2=p1;
-      p1=(struct student *)malloc(LEN);
-      scanf("%ld",&p1->score);
-  }
-  p2->next=NULL;
-  return head;
+void CreateBiTree(BiTree* T) {
+	char ch = 0;
+	scanf("%c", &ch);
+	if (ch == ' ') {
+		*T = NULL;
+	} else {
+		*T = (BiTree)malloc(sizeof(BitNode));
+		if (!(*T)) {
+			exit(-1);
+		}
+		(*T)->data = ch;
+		CreateBiTree(&((*T)->lchild));
+		CreateBiTree(&((*T)->rchild));
+	}
 }
 
-void printflist(struct student *head)
-{
-    struct student *p1;
-    printf("******printflist********\n");
-    if(head->next==NULL) printf("this list is null!\n");
-    else
-    {
-        p1=head->next;
-        do
-        {
-          printf("%ld ",p1->score);
-          p1=p1->next;
-        }while(p1!=NULL);
-    }
-    printf("\n");
+BiTree pre;
+
+void InThreading(BiTree T) {
+	if (T) {
+		InThreading(T->lchild);
+		if (!T->lchild) {
+			T->ltag = Thread;
+			T->lchild = pre;
+		} else {
+			T->ltag = Linked;
+		}
+		if (!pre->rchild) {
+			pre->rtag = Thread;
+			pre->rchild = T;
+		} else {
+			pre->rtag = Linked;
+		}
+		pre = T;
+		InThreading(T->rchild);
+	}
+}
+void InOrderThreading(BiTree* Thrt, BiTree T) {
+	if (!T) {
+		return;
+	}
+	*Thrt = (BiTree)malloc(sizeof(BitNode));
+	if (!(*Thrt)) {
+		exit(-1);
+	}
+	(*Thrt)->ltag = Linked;
+	(*Thrt)->rtag = Thread;
+	(*Thrt)->lchild = T;
+	(*Thrt)->rchild = *Thrt;
+	pre = *Thrt;
+	InThreading(T);
+	pre->rtag = Thread;
+	pre->rchild = *Thrt;
+	(*Thrt)->rchild = pre;
 }
 
-int main()
-{
-    struct student *pa,*pb,*pt,*flag,*pp;
-    pa=creat();
-    pb=creat();
-    printflist(pa);
-    printflist(pb);
-    flag=pa;
-    pa=pa->next; //指向首元节点
-    pb=pb->next;
-    if(pa->score<=pb->score)//比较首元节点的大小
-        {
-            flag->next=pa;
-            pp=pt=pa;
-            pa=pa->next;
-            pp->next=NULL;
-        }
-    else
-        {
-            flag->next=pb;
-            pp=pt=pb;
-            pb=pb->next;
-            pp->next=NULL;
-        }
-    while(pa&&pb)
-    {
-        if(pa->score<=pb->score)
-        {
-            flag->next=pa;
-            pp=pa;
-            pa=pa->next;
-            pp->next=pt;
-            pt=pp;
-        }
-        else
-        {
-            flag->next=pb;
-            pp=pb;
-            pb=pb->next;
-            pp->next=pt;
-            pt=pp;
-        }
-    }
-    while(pa!=NULL)
-        {
-            flag->next=pa;
-            pp=pa;
-            pa=pa->next;
-            pp->next=pt;
-            pt=pp;
-        }
-    while(pb!=NULL)
-       {
-            flag->next=pb;
-            pp=pb;
-            pb=pb->next;
-            pp->next=pt;
-            pt=pp;
-       }
-    printflist(flag);
-    return 0;
-    }
+void InOrderTraverse(BiTree Thrt) {
+	BiTree p = Thrt->lchild;
+    while (p != Thrt) {
+		while (p->ltag == Linked) {
+			p = p->lchild;
+		}
+		printf("%2c", p->data);
+		while (p->rtag == Thread && p->rchild != Thrt) {
+			p = p->rchild;
+			printf("%2c", p->data);
+		}
+		p = p->rchild;
+	}
+	printf("\n");
+}
+
+
+int main() {
+	BiTree T1, Thrt;
+	CreateBiTree(&T1);
+	InOrderThreading(&Thrt, T1);
+	printf("**************************\n");
+	InOrderTraverse(Thrt);
+	if (!Thrt) {
+		printf("OK\n");
+	}
+	system("pause");
+	return 0;
+}
+
