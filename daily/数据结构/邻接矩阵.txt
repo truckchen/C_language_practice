@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define ok 1
+#define maxint 32767
+#define maxtop 100
+
+typedef struct
+{
+  char vex[maxtop];
+  int arcs[maxtop][maxtop];
+  int vexnum,arcnum;
+}graph;
+
+int locate(graph g,char c)
+{
+    int i;
+    for(i=0;i<g.vexnum;i++)
+      if(c==g.vex[i])
+           {
+             return i;
+           }
+       else continue;
+
+    return 0;
+}
+
+int creatgraph()
+{
+    graph g;
+    int i,j,k;
+    int dsum,bsum,length;
+    char c1,c2;
+    printf("输入顶点的总数和边的总数：\n");
+    scanf("%d %d",&dsum,&bsum);
+    g.vexnum=dsum;
+    g.arcnum=bsum;
+    printf("输入每个点的信息：\n");
+    getchar();
+    for(i=0;i<g.vexnum;i++)
+       scanf("%c",&g.vex[i]);
+
+    for(i=0;i<g.vexnum;i++)
+    {
+     for(j=0;j<g.vexnum;j++)
+        g.arcs[i][j]=0;
+    }
+    printf("\n输入边的端点以及权值：\n");
+    //printf("****%d****\n",g.arcnum);
+    getchar( );
+    for(k=0;k<g.arcnum;k++)
+      {
+        scanf("%c %c %d",&c1,&c2,&length);
+        getchar();
+        //printf("==%c==%c==%d\n",c1,c2,length);
+        i=locate(g,c1);
+        j=locate(g,c2);
+        //printf("**%d***%d***%d\n",i,j,length);
+        g.arcs[i][j]=length;
+        g.arcs[j][i]=g.arcs[i][j];
+      }
+    //printf("*************************\n");
+    for(i=0;i<g.vexnum;i++)
+        printf(" %c",g.vex[i]);
+    printf("\n");
+    for(i=0;i<g.vexnum;i++)
+    {
+      printf("%c",g.vex[i]);
+      for(j=0;j<g.vexnum;j++)
+          printf("%d ",g.arcs[i][j]);
+      printf("\n");
+    }
+    return 0;
+}
+
+int main()
+{
+    //graph g[50];
+    creatgraph();
+    return 0;
+}
